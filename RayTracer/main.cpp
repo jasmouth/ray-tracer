@@ -1,6 +1,7 @@
 #include <fstream>
 #include <chrono>
 #include <random>
+#include <limits>
 #include "Sphere.h"
 #include "HitableList.h"
 #include "Camera.h"
@@ -49,7 +50,7 @@ int main() {
 
 Vec3 Color(const Ray& r, HitableList *world) {
 	HitRecord rec;
-	if (world->Hit(r, 0.001f, FLT_MAX, rec)) {
+	if (world->Hit(r, 0.001f, std::numeric_limits<float>::max(), rec)) {
 		Vec3 target = rec.hitPoint + rec.normal + RandomPointInUnitSphere();
 		return 0.5f * Color(Ray(rec.hitPoint, target - rec.hitPoint), world);
 	}
