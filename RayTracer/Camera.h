@@ -11,8 +11,9 @@ public:
 		horizontal = Vec3(4.0f, 0.0f, 0.0f);
 		vertical = Vec3(0.0f, 2.0f, 0.0f);
 	}
+
 	Ray CreateRay(const float u, const float v) const {
-		return Ray(origin, lowerLeftCorner + u*horizontal + v*vertical);
+		return Ray(origin, lowerLeftCorner + u * horizontal + v * vertical);
 	}
 
 	Vec3 origin;
