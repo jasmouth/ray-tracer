@@ -2,6 +2,7 @@
 .vscode/
 Debug/
 RayTracer/Debug/
-RayTracer/RayTracer.vcxproj*
+RayTracer.vcxproj*
 output.ppm
 .DS_Store
+RayTracer.sln

@@ -14,15 +14,16 @@ int main() {
 	std::mt19937 generator(seed);
 	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
-	int numX = 800;
-	int numY = 400;
+	int numX = 1000;
+	int numY = 500;
 	int numSamples = 100;
-	Hitable *list[4];
-	list[0] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Vec3(0.8f, 0.3f, 0.3f)));
-	list[1] = new Sphere(Vec3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(Vec3(0.2f, 0.4f, 0.0f)));
-	list[2] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(Vec3(0.8f, 0.8f, 0.8f), 0.05f));
-	list[3] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(Vec3(0.8f, 0.6f, 0.2f), 0.8f));
-	HitableList *world = new HitableList(list, 4);
+	Hitable *list[5];
+	list[0] = new Sphere(Vec3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(Vec3(0.1f, 0.2f, 0.5f)));
+	list[1] = new Sphere(Vec3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(Vec3(0.8f, 0.8f, 0.0f)));
+	list[2] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f));
+	list[3] = new Sphere(Vec3(1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f));
+	list[4] = new Sphere(Vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(Vec3(0.8f, 0.6f, 0.2f), 0.8f));
+	HitableList *world = new HitableList(list, 5);
 	Camera camera;
 
 	std::cout << "Generating output file..." << std::endl;
