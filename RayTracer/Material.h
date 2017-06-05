@@ -29,10 +29,10 @@ float Schlick(float cosine, const float refractiveIndex) {
 }
 
 Vec3 RandomPointInUnitSphere() {
-	Vec3 p;
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::mt19937 generator(seed);
 	std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+	Vec3 p;
 	do {
 		p = 2.0f * Vec3(dist(generator), dist(generator), dist(generator)) - Vec3(1.0f, 1.0f, 1.0f);
 	} while (p.SquaredLength() >= 1.0f);

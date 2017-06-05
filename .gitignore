@@ -3,6 +3,5 @@
 Debug/
 RayTracer/Debug/
 RayTracer.vcxproj*
-output.ppm
 .DS_Store
 RayTracer.sln
