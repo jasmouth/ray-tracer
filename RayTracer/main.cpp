@@ -7,9 +7,9 @@
 #include "Camera.h"
 #include "Material.h"
 
-Vec3 Color(const Ray& r, Hitable *world, int depth);
+Vec3 Color(const Ray& r, HitableList *world, int depth);
 
-Hitable* CreateRandomScene(std::mt19937 rng, std::uniform_real_distribution<float> dist);
+HitableList* CreateRandomScene(std::mt19937 rng, std::uniform_real_distribution<float> dist);
 
 int main() {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -20,8 +20,8 @@ int main() {
 	int numY = 800;
 	int numSamples = 100;
 
-	Hitable *world = CreateRandomScene(generator, distribution);
-	const Vec3 lookFrom = Vec3(13.0f, 2.0f, 3.0f);
+	HitableList *world = CreateRandomScene(generator, distribution);
+	const Vec3 lookFrom = Vec3(13.0f, 3.0f, 3.0f);
 	const Vec3 lookAt = Vec3(0.0f, 0.0f, 0.0f);
 	const float focusDistance = 10.0f;
 	const float aperture = 0.1f;
@@ -29,7 +29,7 @@ int main() {
 		lookFrom,
 		lookAt,
 		Vec3(0.0f, 1.0f, 0.0f),
-		20.0f,
+		30.0f,
 		float(numX) / float(numY),
 		aperture,
 		focusDistance
@@ -61,7 +61,7 @@ int main() {
 	return 0;
 }
 
-Vec3 Color(const Ray& r, Hitable *world, int depth) {
+Vec3 Color(const Ray& r, HitableList *world, int depth) {
 	HitRecord rec;
 	if (world->Hit(r, 0.001f, std::numeric_limits<float>::max(), rec)) {
 		Ray scatteredRay;
@@ -77,21 +77,23 @@ Vec3 Color(const Ray& r, Hitable *world, int depth) {
 		const float t = 0.5f * (unitDirection.y() + 1.0f);
 		// Linear Interpolation
 		// blendedValue = (1-t)*startValue + t*endValue => where 0.0 < t < 1.0
-		return (1.0f - t)*Vec3(1.0f, 1.0f, 1.0f) + t*Vec3(0.5f, 0.7f, 1.0f);
+		return (1.0f - t)*Vec3(1.0f, 0.55f, 0.0f) + t*Vec3(0.2f, 0.1f, 0.5f);
 	}
 }
 
-Hitable* CreateRandomScene(std::mt19937 rng, std::uniform_real_distribution<float> dist) {
+HitableList* CreateRandomScene(std::mt19937 rng, std::uniform_real_distribution<float> dist) {
 	int i = 0;
 	Hitable **list = new Hitable*[500];
-	list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(Vec3(0.5f, 0.5f, 0.5f)));
+	list[i++] = new Sphere(Vec3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(Vec3(0.2f, 0.2f, 0.2f)));
 	for (int a = -11; a < 11; a++) {
 		for (int b = -11; b < 11; b++) {
 			const float materialChoice = dist(rng);
 			const Vec3 center = Vec3(a + 0.9f * dist(rng), 0.2f, b + 0.9f * dist(rng));
-			if ((center - Vec3(4.0f, 0.2f, 0.0f)).Length() > 0.9f) {
+			if ((center - Vec3(4.0f, 0.2f, 0.0f)).Length() > 0.9f &&
+				(center - Vec3(0.0f, 0.2f, 1.0f)).Length() > 0.9f &&
+				(center - Vec3(2.0f, 0.2f, -2.0f)).Length() > 0.9f) {
 				Material *material;
-				if (materialChoice < 0.8f) { // Diffuse
+				if (materialChoice < 0.75f) { // Diffuse
 					material = new Lambertian(
 						Vec3(
 							dist(rng) * dist(rng),
@@ -99,7 +101,7 @@ Hitable* CreateRandomScene(std::mt19937 rng, std::uniform_real_distribution<floa
 							dist(rng) * dist(rng)
 						)
 					);
-				} else if (materialChoice < 0.95f) { // Metal
+				} else if (materialChoice < 0.90f) { // Metal
 					material = new Metal(
 						Vec3(
 							0.5f * (1 + dist(rng)),
@@ -114,9 +116,9 @@ Hitable* CreateRandomScene(std::mt19937 rng, std::uniform_real_distribution<floa
 			}
 		}
 	}
-
-	list[i++] = new Sphere(Vec3(0.0f, 1.0f, 0.0f), 1.0f, new Dielectric(1.5f));
-	list[i++] = new Sphere(Vec3(-4.0f, 1.0f, 0.0f), 1.0f, new Lambertian(Vec3(0.4f, 0.2f, 0.1f)));
+	list[i++] = new Sphere(Vec3(2.0f, 1.0f, -2.0f), 1.0f, new Dielectric(1.5f));
+	list[i++] = new Sphere(Vec3(2.0f, 1.0f, -2.0f), -0.95f, new Dielectric(1.5f));
+	list[i++] = new Sphere(Vec3(0.0f, 1.0f, 1.0f), 1.0f, new Lambertian(Vec3(1, 1, 1)));
 	list[i++] = new Sphere(Vec3(4.0f, 1.0f, 0.0f), 1.0f, new Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f));
 	
 	return new HitableList(list, i);

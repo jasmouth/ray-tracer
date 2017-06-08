@@ -10,7 +10,7 @@ Vec3 RandomPointInUnitDisk() {
 	Vec3 p;
 	do {
 		p = 2.0f * Vec3(dist(generator), dist(generator), 0.0f) - Vec3(1.0f, 1.0f, 0.0f);
-	} while (Dot(p, p) >= 1.0f);
+	} while (p.SquaredLength() >= 1.0f);
 	return p;
 }
 
